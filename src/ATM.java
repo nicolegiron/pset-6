@@ -31,6 +31,15 @@ public class ATM {
     /*
      * Application execution begins here.
      */
+    public void startup() {
+    	System.out.println("Welcome to the AIT ATM!");
+    	
+    	System.out.print("Account No.:");
+    	long accountNo = in.nextLong();
+    	
+    	System.out.print("Pin        :");
+    	int pin = in.nextInt();
+    }
     
     public static void main(String[] args) {
         ATM atm = new ATM();
