@@ -16,6 +16,9 @@ public class ATM {
     public static final int INSUFFICIENT = 1;
     public static final int SUCCESS = 2;
     
+    public static final int FIRST_NAME_WIDTH = 20;
+    public static final int LAST_NAME_WIDTH = 20;
+    
     ////////////////////////////////////////////////////////////////////////////
     //                                                                        //
     // Refer to the Simple ATM tutorial to fill in the details of this class. //
@@ -30,7 +33,7 @@ public class ATM {
     public ATM() {
         this.in = new Scanner(System.in);
         
-        activateAccount = new BankAccount(1234,12345678, 0, new User("Nicole", "Giron"))
+        activeAccount = new BankAccount(1234, new User("Nicole", "Giron"));
         
         try {
 			this.bank = new Bank();
@@ -53,7 +56,7 @@ public class ATM {
         	int pin = in.nextInt();
         	
         	if(isValidLogin(accountNo, pin)) {
-        		System.out.println("\nHello, again, " + activateAccount.getAccountHolder().getFirstName() + "!\n");
+        		System.out.println("\nHello, again, " + activeAccount.getAccountHolder().getFirstName() + "!\n");
         		
         		boolean validLogin = true;
         		while(validLogin) {
@@ -67,17 +70,17 @@ public class ATM {
         		}
         	
         	}else {
-        		if (accountNo = -1 && pin == -1) {
+        		if (accountNo == -1 && pin == -1) {
         			shutdown();
         		} else {
-        			System.out.println("\nInvalid account number and/or PIN.\n")
+        			System.out.println("\nInvalid account number and/or PIN.\n");
         		}
         	}    	
     	}
     }
     
-    public boolean isValidLogin(logn accountNo, int pin) {
-    	return accountNo == activateAccount.getAccountNo() && pin == activeAccount.getPin();
+    public boolean isValidLogin(long accountNo, int pin) {
+    	return accountNo == activeAccount.getAccountNo() && pin == activeAccount.getPin();
     }
     
     public int getSelection() {
@@ -96,7 +99,7 @@ public class ATM {
     	System.out.println("\nEnter amount: ");
     	double amount = in.nextDouble();
     	
-    	int status = activateAccount.deposit(amount);
+    	int status = activeAccount.deposit(amount);
     	if (status == ATM.INVALID) {
     		System.out.println("\nDeposit rejected.Amount must be greater than $0.00.\n");
     	} else if (status == ATM.SUCCESS) {
