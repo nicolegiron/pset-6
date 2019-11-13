@@ -49,10 +49,10 @@ public class ATM {
     	System.out.println("Welcome to the AIT ATM!\n");
     	
     	while (true) {
-    		System.out.print("Account No.:");
+    		System.out.print("Account No.: ");
         	long accountNo = in.nextLong();
         	
-        	System.out.print("Pin        :");
+        	System.out.print("Pin        : ");
         	int pin = in.nextInt();
         	
         	if(isValidLogin(accountNo, pin)) {
