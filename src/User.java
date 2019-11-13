@@ -19,5 +19,18 @@ public class User {
         return String.format("%1$-" + ATM.FIRST_NAME_WIDTH + "s", firstName) +
             String.format("%1$-" + ATM.LAST_NAME_WIDTH + "s", lastName);
     }
+    
+    public User(String firstName, String lastName) {
+    	this.firstName = firstName;
+    	this.lastName = lastName;
+    }
+    
+    public String getFirstName() {
+    	return firstName;
+    }
+    
+    public String getLastName() {
+    	return lastName;
+    }
 }
 

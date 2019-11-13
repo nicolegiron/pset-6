@@ -12,6 +12,10 @@ public class ATM {
     public static final int WITHDRAW = 3;
     public static final int LOGOUT = 4;
     
+    public static final int INVALID = 0;
+    public static final int INSUFFICIENT = 1;
+    public static final int SUCCESS = 2;
+    
     ////////////////////////////////////////////////////////////////////////////
     //                                                                        //
     // Refer to the Simple ATM tutorial to fill in the details of this class. //
@@ -92,16 +96,24 @@ public class ATM {
     	System.out.println("\nEnter amount: ");
     	double amount = in.nextDouble();
     	
-    	activeAccount.deposit(amount);
-    	System.out.println();
+    	int status = activateAccount.deposit(amount);
+    	if (status == ATM.INVALID) {
+    		System.out.println("\nDeposit rejected.Amount must be greater than $0.00.\n");
+    	} else if (status == ATM.SUCCESS) {
+    		System.out.println("\nDeposit accepted.\n");
+    	}
     }
     
     public void withdraw() {
     	System.out.println("\nEnter amount: ");
     	double amount = in.nextDouble();
     	
-    	activeAccount.withdraw(amount);
-    	System.out.println();
+    	int status = activeAccount.withdraw(amount);
+    	if (status == ATM.INVALID) {
+    		System.out.println("\nWithdraw rejected.Amount must be greater than $0.00.\n");
+    	} else if (status == ATM.SUCCESS) {
+    		System.out.println("\nwithdraw accepted.\n");
+    	}
     }
     
     public void shutdown() {
