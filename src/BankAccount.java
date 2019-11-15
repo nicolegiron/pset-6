@@ -42,10 +42,23 @@ public class BankAccount {
     
     public BankAccount(int pin, User accountHolder) {
     	this.pin = pin;
+    	this.accountHolder = accountHolder;
+    }
+    
+    public BankAccount(int pin, long accountNo, User accountHolder) {
+    	this.pin = pin;
+    	this.accountNo = ++BankAccount.prevAccountNo;
+    	this.accountHolder = accountHolder;
+    }
+    
+    public BankAccount(int pin, long accountNo, double balance, User accountHolder) {
+    	this.pin = pin;
     	this.accountNo = ++BankAccount.prevAccountNo;
     	this.balance = 0.0;
     	this.accountHolder = accountHolder;
     }
+    
+
     
     public int getPin() {
     	return pin;
