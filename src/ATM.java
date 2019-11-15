@@ -50,21 +50,25 @@ public class ATM {
 
     	while (true) {
     		System.out.print("Account No.: ");
-        String accountNoString = in.nextLine();
+    		String accountNoString = in.nextLine();
 
         	if(accountNoString.equals("+")) {
-//        		System.out.println("\nFirst Name: ");
-//        		String firstName = in.nextLine();
-//
-//        		System.out.println("\nLast Name: ");
-//        		String lastName = in.nextLine();
-//
-//        		System.out.println("\nPin: ");
-//        		int pin = in.nextInt();
-//        		int user = User.User(firstName, lastName);
-//
-//        		Bank.createAccount(pin, user);
+        		System.out.print("First Name: ");
+        		String firstName = in.nextLine();
+
+        		System.out.print("Last Name: ");
+        		String lastName = in.nextLine();
+
+        		System.out.print("Pin: ");
+        		int pin = in.nextInt();
+        		User newUser =  new User(firstName, lastName);
+
+        		BankAccount newAccount = bank.createAccount(pin, newUser);
+        		
+        		System.out.println("Thank you. Your account number is ."
+        			+ "Please login to access your newly created account");
         	} else {
+        		in.nextLine();
             long accountNo = Long.parseLong(accountNoString);
         		System.out.print("Pin        : ");
             	int pin = in.nextInt();
