@@ -69,8 +69,10 @@ public class Bank {
     public BankAccount login(long accountNo, int pin) {
         BankAccount bankAccount = getAccount(accountNo);
         
-        if (bankAccount.getPin() == pin) {
-            return bankAccount;
+        if(bankAccount == null) {
+        	return null;
+        } else if(bankAccount.getPin() == pin) {
+        	return bankAccount;
         } else {
             return null;
         }
