@@ -54,7 +54,7 @@ public class BankAccount {
     public BankAccount(int pin, long accountNo, double balance, User accountHolder) {
     	this.pin = pin;
     	this.accountNo = ++BankAccount.prevAccountNo;
-    	this.balance = 0.0;
+    	this.balance = balance;
     	this.accountHolder = accountHolder;
     }
     
@@ -82,6 +82,8 @@ public class BankAccount {
     public int deposit(double amount) {
     	if(amount <= 0) {
     		return ATM.INVALID;
+    	} else if (balance + amount >= ATM.INVALIDTOP) {
+    		return ATM.INVALIDMAX;
     	} else {
     		balance = balance + amount;
     	}

@@ -14,9 +14,11 @@ public class ATM {
     public static final int LOGOUT = 5;
 
     public static final int INVALID = 0;
-    public static final long INVALIDTOP = 1000000000000L;
     public static final int INSUFFICIENT = 1;
-    public static final int SUCCESS = 2;
+    public static final int SUCCESS = 2;    
+    public static final int INVALIDMAX = 3;
+    public static final int INVALIDADD= 4;
+    public static final long INVALIDTOP = 1000000000000L;
 
     public static final int FIRST_NAME_WIDTH = 20;
     public static final int LAST_NAME_WIDTH = 20;
@@ -60,12 +62,34 @@ public class ATM {
         	if(accountNoString.equals("+")) {
         		System.out.print("First Name: ");
         		String firstName = in.nextLine();
+        		
+        		if(firstName.length() > 20) {
+        			System.out.println("\nFirst Name is too long. Please shorten the length.\n");
+        			System.out.print("First Name: ");
+            		firstName = in.nextLine();
+        		}
 
         		System.out.print("Last Name: ");
         		String lastName = in.nextLine();
+        		
+        		if(lastName.length() > 30) {
+        			System.out.println("\nLast Name is too long. Please shorten the length.\n");
+        			System.out.print("Last Name: ");
+        			lastName = in.nextLine();
+        		}
 
         		System.out.print("Pin: ");
         		int pin = in.nextInt();
+        		
+        		if(pin > 9999) {
+        			System.out.println("\nPin is too long. Please enter a pin 1000-9999.\n");
+        			System.out.print("Pin: ");
+        			pin = in.nextInt();
+        		}else if(pin < 1000) {
+        			System.out.println("\nPin is too short. Please enter a pin 1000-9999.\n");
+        			System.out.print("Pin: ");
+        			pin = in.nextInt();
+        		}
         		
         		User newUser =  new User(firstName, lastName);
 
@@ -73,13 +97,13 @@ public class ATM {
         		
         		long newAccountNo = newAccount.getAccountNo();
         		System.out.println("\nThank you. Your account number is " + newAccountNo
-        			+ ". Please login to access your newly created account");
-        		
+        			+ ".\nPlease login to access your newly created account\n");
+        		needNextLine++;
         		bank.update(newAccount);
         		bank.save();
         	} else {
         		
-        		long accountNo = Long.valueOf(accountNoString);
+        		long  accountNo = Long.valueOf(accountNoString);
         		
         		System.out.print("Pin        : ");
             	int pin = in.nextInt();
@@ -127,40 +151,79 @@ public class ATM {
     }
 
     public void showBalance() {
-    	System.out.println("\nCurrent balance: " + activeAccount.getBalance());
+    	System.out.println("\nCurrent balance: " + activeAccount.getBalance() + "\n");
     }
 
     public void deposit() {
     	System.out.println("\nEnter amount: ");
     	double amount = in.nextDouble();
-
+    	
     	int status = activeAccount.deposit(amount);
-    	if (status == ATM.INVALID) {
-    		System.out.println("\nDeposit rejected. Amount must be greater than $0.00.\n");
-    	}  else if (status > ATM.INVALIDTOP) {
-    		System.out.println("\nDeposit rejected. Amount must be less than $999999999999.99.\n");
-    	} else if (status == ATM.SUCCESS) {
-    		System.out.println("\nDeposit accepted.\n");
-    	}
+        if (status == ATM.INVALID) {
+            System.out.println("\nDeposit rejected. Amount must be greater than $0.00.\n");
+        } else if (status == ATM.INVALIDMAX) {
+            System.out.println("\nDeposit rejected. Amount would cause balance to exceed $999,999,999,999.99.\n");
+        } else {
+            System.out.println("\nDeposit accepted.\n");
+        }
+        
+    	bank.update(activeAccount);
+		bank.save();
     }
 
-    public void withdraw() {
+    public void withdraw() {    	
     	System.out.println("\nEnter amount: ");
     	double amount = in.nextDouble();
 
     	int status = activeAccount.withdraw(amount);
-    	if (status <= ATM.INVALID) {
-    		System.out.println("\nWithdraw rejected. Amount must be greater than $0.00.\n");
-    	} else if (Long.valueOf(activeAccount.getBalance()) < amount) {
-    		System.out.println("\nWithdraw rejected. Insufficient funds.\n");
-    	}else if (status == ATM.SUCCESS) {
-    		System.out.println("\nwithdraw accepted.\n");
-    	}
+        if (status == ATM.INVALID) {
+            System.out.println("\nWithdrawal rejected. Amount must be greater than $0.00.\n");
+        } else if (status == ATM.INSUFFICIENT) {
+            System.out.println("\nWithdrawal rejected. Insufficient funds.\n");
+        } else if (status == ATM.SUCCESS) {
+            System.out.println("\nWithdrawal accepted.\n");
+        }
+    	
+    	bank.update(activeAccount);
+		bank.save();
     }
     
-    public void transfer() {
+    
+	public void transfer() {
     	System.out.println("Enter account: ");
+    	long accountNo = in.nextLong();
     	System.out.println("Enter amount: ");
+    	long amount = in.nextLong();
+    	
+    	BankAccount currentAccount = bank.getAccount(accountNo);
+    	
+    	int depositStatus = 0;
+    	if(currentAccount != null) {
+    		depositStatus = currentAccount.deposit(amount);
+    	}
+    	
+    	if(depositStatus == ATM.SUCCESS) {
+    		activeAccount.withdraw(amount);
+    	}
+    	
+    	if(currentAccount == null) {
+    		System.out.println("\nTransfer rejected. Destination account not found.\n");
+    	} else if (depositStatus == ATM.INVALID) {
+    		System.out.println("\nTransfer rejected. Amount must be greater than $0.00.\n");
+    	} else if (depositStatus == ATM.INVALIDMAX) {
+    		System.out.println("\nTransfer rejected. Amount would cause destination balance to exceed $999,999,999,999.99. \n");
+    	} else if (depositStatus == ATM.SUCCESS) {
+    		System.out.println("\nTransfer accepted.\n");
+    	} else {
+    		System.out.println("\nTransfer rejected. Insufficient funds.\n");
+    	}
+    		
+    	bank.update(activeAccount);
+		bank.save();
+		if(currentAccount != null) {
+			bank.update(currentAccount);
+			bank.save();
+		}
     }
 
     public void shutdown() {
