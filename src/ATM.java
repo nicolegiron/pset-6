@@ -102,7 +102,7 @@ public class ATM {
 
             	if(isValidLogin(accountNo, pin)) {
             		System.out.println("\nHello, again, " + activeAccount.getAccountHolder().getFirstName() + "!\n");
-            		System.out.println(activeAccount.getBalance().toString());
+            		System.out.println(activeAccount.toString());
             		
             		boolean validLogin = true;
             		while(validLogin) {
