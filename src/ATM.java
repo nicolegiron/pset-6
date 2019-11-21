@@ -91,16 +91,8 @@ public class ATM {
         			pin = in.nextInt();
         		}
         		
-        		User newUser =  new User(firstName, lastName);
-
-        		BankAccount newAccount = bank.createAccount(pin, newUser);
+        		makeNewAccount(firstName, lastName, pin);
         		
-        		long newAccountNo = newAccount.getAccountNo();
-        		System.out.println("\nThank you. Your account number is " + newAccountNo
-        			+ ".\nPlease login to access your newly created account\n");
-        		needNextLine++;
-        		bank.update(newAccount);
-        		bank.save();
         	} else {
         		
         		long  accountNo = Long.valueOf(accountNoString);
@@ -110,7 +102,8 @@ public class ATM {
 
             	if(isValidLogin(accountNo, pin)) {
             		System.out.println("\nHello, again, " + activeAccount.getAccountHolder().getFirstName() + "!\n");
-
+            		System.out.println(activeAccount.getBalance().toString());
+            		
             		boolean validLogin = true;
             		while(validLogin) {
             			switch (getSelection()) {
@@ -125,6 +118,7 @@ public class ATM {
 
             	} else {
             		if (accountNo == -1 && pin == -1) {
+            			bank.save();
             			shutdown();
             		} else {
             			System.out.println("\nInvalid account number and/or PIN.\n");
@@ -133,6 +127,19 @@ public class ATM {
             	}
         	}
     	}
+    }
+    
+    public void makeNewAccount(String firstName, String lastName, int pin) {
+    	User newUser =  new User(firstName, lastName);
+
+		BankAccount newAccount = bank.createAccount(pin, newUser);
+		
+		long newAccountNo = newAccount.getAccountNo();
+		System.out.println("\nThank you. Your account number is " + newAccountNo
+			+ ".\nPlease login to access your newly created account\n");
+		needNextLine++;
+		bank.update(newAccount);
+		bank.save();
     }
 
 
@@ -155,6 +162,7 @@ public class ATM {
     }
 
     public void deposit() {
+    	System.out.println(activeAccount.toString());
     	System.out.println("\nEnter amount: ");
     	double amount = in.nextDouble();
     	
@@ -166,12 +174,12 @@ public class ATM {
         } else {
             System.out.println("\nDeposit accepted.\n");
         }
-        
     	bank.update(activeAccount);
 		bank.save();
+		System.out.println(activeAccount.toString());
     }
 
-    public void withdraw() {    	
+    public void withdraw() {
     	System.out.println("\nEnter amount: ");
     	double amount = in.nextDouble();
 
@@ -220,6 +228,7 @@ public class ATM {
     		
     	bank.update(activeAccount);
 		bank.save();
+		System.out.println(currentAccount.toString());
 		if(currentAccount != null) {
 			bank.update(currentAccount);
 			bank.save();
@@ -230,7 +239,7 @@ public class ATM {
     	if(in != null) {
     		in.close();
     	}
-
+		bank.save();
     	System.out.println("\nGoodbye!");
     	System.exit(0);
     }

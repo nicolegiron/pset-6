@@ -114,6 +114,7 @@ public class Bank {
         }
         
         accounts.set(index, account);
+        
     }
     
     /**
@@ -190,7 +191,7 @@ public class Bank {
      */
     
     private static BankAccount parseBankAccount(String account) {
-        return new BankAccount(Bank.parsePin(account),
+    	return new BankAccount(Bank.parsePin(account),
             Bank.parseAccountNo(account),
             Bank.parseBalance(account),
             Bank.parseUser(account)
@@ -240,6 +241,7 @@ public class Bank {
      */
     
     private static double parseBalance(String account) {
+    	System.out.println(account.toString());
         return Double.parseDouble(account.substring(BALANCE_START).strip());
     }
 }
