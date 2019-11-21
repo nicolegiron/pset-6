@@ -68,7 +68,7 @@ public class Bank {
     
     public BankAccount login(long accountNo, int pin) {
         BankAccount bankAccount = getAccount(accountNo);
-        
+
         if(bankAccount == null) {
         	return null;
         } else if(bankAccount.getPin() == pin) {
@@ -91,7 +91,6 @@ public class Bank {
                 return account;
             }
         }
-        
         return null;
     }
     
@@ -148,9 +147,13 @@ public class Bank {
         
         try (BufferedReader br = new BufferedReader(new FileReader(new File(DATA)))) {
             String account;
+            System.out.println("init: \t"+accounts.toString());  
             
             while ((account = br.readLine()) != null) {
                 accounts.add(Bank.parseBankAccount(account));
+                System.out.println("ADDED to accounts:\t"+ Bank.parseBankAccount(account));
+                //System.out.println("parseBankAccount ACCOUNTS:\t"+ accounts.toString());
+                //System.out.println("parseBankAccount ACCOUNT:\t"+ account.toString());  
             }
         } catch (FileNotFoundException e) {
             System.err.println("Error: Unable to find data file.");
@@ -160,8 +163,7 @@ public class Bank {
             System.err.println("Error: Unable to read from data file.");
             
             accounts = null;
-        }
-                
+        }      
         return accounts;
     }
     
@@ -191,6 +193,7 @@ public class Bank {
      */
     
     private static BankAccount parseBankAccount(String account) {
+        System.out.println("parsebankAccount:\t" + account.toString());    
     	return new BankAccount(Bank.parsePin(account),
             Bank.parseAccountNo(account),
             Bank.parseBalance(account),
@@ -241,7 +244,7 @@ public class Bank {
      */
     
     private static double parseBalance(String account) {
-    	System.out.println(account.toString());
+    	System.out.println("parseBalance:\t\t"+account.toString());
         return Double.parseDouble(account.substring(BALANCE_START).strip());
     }
 }
