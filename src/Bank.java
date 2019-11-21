@@ -23,8 +23,8 @@ public class Bank {
     private final static int FIRST_NAME_START = 13;
     private final static int FIRST_NAME_END = 33;
     private final static int LAST_NAME_START = 33;
-    private final static int LAST_NAME_END = 63;
-    private final static int BALANCE_START = 63;
+    private final static int LAST_NAME_END = 62;
+    private final static int BALANCE_START = 62;
     
     private final static String DATA = "data/accounts.dat";		// data file path
     
@@ -147,13 +147,9 @@ public class Bank {
         
         try (BufferedReader br = new BufferedReader(new FileReader(new File(DATA)))) {
             String account;
-            System.out.println("init: \t"+accounts.toString());  
             
             while ((account = br.readLine()) != null) {
                 accounts.add(Bank.parseBankAccount(account));
-                System.out.println("ADDED to accounts:\t"+ Bank.parseBankAccount(account));
-                //System.out.println("parseBankAccount ACCOUNTS:\t"+ accounts.toString());
-                //System.out.println("parseBankAccount ACCOUNT:\t"+ account.toString());  
             }
         } catch (FileNotFoundException e) {
             System.err.println("Error: Unable to find data file.");
@@ -192,8 +188,7 @@ public class Bank {
      * @return the bank account
      */
     
-    private static BankAccount parseBankAccount(String account) {
-        System.out.println("parsebankAccount:\t" + account.toString());    
+    private static BankAccount parseBankAccount(String account) { 
     	return new BankAccount(Bank.parsePin(account),
             Bank.parseAccountNo(account),
             Bank.parseBalance(account),
@@ -244,7 +239,6 @@ public class Bank {
      */
     
     private static double parseBalance(String account) {
-    	System.out.println("parseBalance:\t\t"+account.toString());
         return Double.parseDouble(account.substring(BALANCE_START).strip());
     }
 }
