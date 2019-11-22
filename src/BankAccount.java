@@ -84,6 +84,8 @@ public class BankAccount {
     		return ATM.INVALID;
     	} else if (balance + amount >= ATM.INVALIDTOP) {
     		return ATM.INVALIDMAX;
+    	} else if (balance + amount > balance){
+    		return ATM.INSUFFICIENT;
     	} else {
     		balance = balance + amount;
     	}

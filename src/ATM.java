@@ -17,8 +17,11 @@ public class ATM {
     public static final int INSUFFICIENT = 1;
     public static final int SUCCESS = 2;    
     public static final int INVALIDMAX = 3;
-    public static final int INVALIDADD= 4;
+    public static final int INVALIDADD = 4;
     public static final long INVALIDTOP = 1000000000000L;
+    
+    public static final int PINERROR = 0;
+    public static final int PINSUCCESS = 1;
 
     public static final int FIRST_NAME_WIDTH = 20;
     public static final int LAST_NAME_WIDTH = 20;
@@ -56,49 +59,52 @@ public class ATM {
     		if(needNextLine != 0 || logoutAmount != 0) {
     			in.nextLine();        		
     		}
-    		System.out.print("Account No.: ");
-    		String accountNoString = in.nextLine();
+    		
+    		String accountNoString;
+    		do {
+    			System.out.print("Account No.: ");
+    			accountNoString = in.nextLine();
+    		} while((accountNoString.equals("") || Long.valueOf(accountNoString) < 100000001L
+    				  || Long.valueOf(accountNoString) > 999999999L) && !accountNoString.equals("-1"));
+    		
 
         	if(accountNoString.equals("+")) {
-        		System.out.print("First Name: ");
-        		String firstName = in.nextLine();
         		
-        		if(firstName.length() > 20) {
-        			System.out.println("\nFirst Name is too long. Please shorten the length.\n");
+        		String firstName;
+        		do {
         			System.out.print("First Name: ");
             		firstName = in.nextLine();
-        		}
-
-        		System.out.print("Last Name: ");
-        		String lastName = in.nextLine();
+        		} while(firstName.length() > 20);
         		
-        		if(lastName.length() > 30) {
-        			System.out.println("\nLast Name is too long. Please shorten the length.\n");
+        		
+        		String lastName;
+        		do {
         			System.out.print("Last Name: ");
         			lastName = in.nextLine();
-        		}
-
-        		System.out.print("Pin: ");
-        		int pin = in.nextInt();
+        		} while (lastName.length() > 30);
         		
-        		if(pin > 9999) {
-        			System.out.println("\nPin is too long. Please enter a pin 1000-9999.\n");
+        		int pin;
+        		Long longPin;
+        		do {
         			System.out.print("Pin: ");
-        			pin = in.nextInt();
-        		}else if(pin < 1000) {
-        			System.out.println("\nPin is too short. Please enter a pin 1000-9999.\n");
-        			System.out.print("Pin: ");
-        			pin = in.nextInt();
-        		}
+                	pin = in.nextInt();
+                	longPin = Long.valueOf(pin);
+        		} while (longPin > 9999L || longPin < 1000L);
+        		
         		
         		makeNewAccount(firstName, lastName, pin);
         		
         	} else {
         		
-        		long  accountNo = Long.valueOf(accountNoString);
+        		long accountNo = Long.valueOf(accountNoString);
         		
-        		System.out.print("Pin        : ");
-            	int pin = in.nextInt();
+        		int pin;
+        		Long longPin;
+        		do {
+        			System.out.print("Pin: ");
+                	longPin = in.nextLong();
+                	pin = Math.toIntExact(longPin);
+        		} while ((longPin > 9999L || longPin < 1000L) && pin != -1);
 
             	if(isValidLogin(accountNo, pin)) {
             		System.out.println("\nHello, again, " + activeAccount.getAccountHolder().getFirstName() + "!\n");
@@ -161,7 +167,6 @@ public class ATM {
     }
 
     public void deposit() {
-    	System.out.println(activeAccount.toString());
     	System.out.println("\nEnter amount: ");
     	double amount = in.nextDouble();
     	
@@ -175,7 +180,6 @@ public class ATM {
         }
     	bank.update(activeAccount);
 		bank.save();
-		System.out.println(activeAccount.toString());
     }
 
     public void withdraw() {
@@ -221,13 +225,12 @@ public class ATM {
     		System.out.println("\nTransfer rejected. Amount would cause destination balance to exceed $999,999,999,999.99. \n");
     	} else if (depositStatus == ATM.SUCCESS) {
     		System.out.println("\nTransfer accepted.\n");
-    	} else {
+    	} else if (depositStatus == ATM.INSUFFICIENT)  {
     		System.out.println("\nTransfer rejected. Insufficient funds.\n");
     	}
     		
     	bank.update(activeAccount);
 		bank.save();
-		System.out.println(currentAccount.toString());
 		if(currentAccount != null) {
 			bank.update(currentAccount);
 			bank.save();
