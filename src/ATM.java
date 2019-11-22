@@ -64,7 +64,7 @@ public class ATM {
     		do {
     			System.out.print("Account No.: ");
     			accountNoString = in.nextLine();
-    		} while((accountNoString.equals("") || Long.valueOf(accountNoString) < 100000001L
+    		} while(!accountNoString.equals("+") && (accountNoString.equals("") || Long.valueOf(accountNoString) < 100000001L
     				  || Long.valueOf(accountNoString) > 999999999L) && !accountNoString.equals("-1"));
     		
 
@@ -74,14 +74,14 @@ public class ATM {
         		do {
         			System.out.print("First Name: ");
             		firstName = in.nextLine();
-        		} while(firstName.length() > 20);
+        		} while(firstName.length() > 20 || firstName.equals(""));
         		
         		
         		String lastName;
         		do {
         			System.out.print("Last Name: ");
         			lastName = in.nextLine();
-        		} while (lastName.length() > 30);
+        		} while (lastName.length() > 30 || lastName.equals(""));
         		
         		int pin;
         		Long longPin;
