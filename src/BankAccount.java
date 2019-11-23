@@ -84,14 +84,29 @@ public class BankAccount {
     		return ATM.INVALID;
     	} else if (balance + amount >= ATM.INVALIDTOP) {
     		return ATM.INVALIDMAX;
-    	} else if (balance + amount > balance){
-    		return ATM.INSUFFICIENT;
     	} else {
     		balance = balance + amount;
     	}
     	return ATM.SUCCESS;
     }
     
+    public int transfer(double amount, String wOD) {
+    	if(amount <= 0) {
+    		return ATM.INVALID;
+    	} else if (balance + amount >= ATM.INVALIDTOP) {
+    		return ATM.INVALIDMAX;
+    	} else if (amount > balance) {
+    		return ATM.INSUFFICIENT;
+    	} else if (amount - balance < 0) {
+    		return ATM.INSUFFICIENT;
+    	} else if (wOD.equals("deposit")){
+    		balance = balance + amount;
+    	} else if (wOD.equals("withdraw")) {
+    		balance = balance - amount;
+    	}
+    	return ATM.SUCCESS;
+    }
+   
     public int withdraw(double amount) {
     	if(amount <= 0) {
     		return ATM.INVALID;

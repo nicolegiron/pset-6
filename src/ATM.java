@@ -175,8 +175,10 @@ public class ATM {
             System.out.println("\nDeposit rejected. Amount must be greater than $0.00.\n");
         } else if (status == ATM.INVALIDMAX) {
             System.out.println("\nDeposit rejected. Amount would cause balance to exceed $999,999,999,999.99.\n");
-        } else {
+        } else if (status == ATM.SUCCESS){
             System.out.println("\nDeposit accepted.\n");
+        } else {
+        	System.out.println("there is an error");
         }
     	bank.update(activeAccount);
 		bank.save();
@@ -209,24 +211,24 @@ public class ATM {
     	BankAccount currentAccount = bank.getAccount(accountNo);
     	
     	int depositStatus = 0;
-    	if(currentAccount != null) {
-    		depositStatus = currentAccount.deposit(amount);
-    	}
-    	
-    	if(depositStatus == ATM.SUCCESS) {
-    		activeAccount.withdraw(amount);
+    	if(currentAccount != null && currentAccount != activeAccount) {
+    		depositStatus = currentAccount.transfer(amount, "deposit");
+    	} else if(depositStatus == ATM.SUCCESS) {
+    		activeAccount.transfer(amount, "withdraw");
     	}
     	
     	if(currentAccount == null) {
     		System.out.println("\nTransfer rejected. Destination account not found.\n");
+    	} else if (currentAccount == activeAccount) {
+    		System.out.println("\nCannot transfer to same account.\n");
     	} else if (depositStatus == ATM.INVALID) {
     		System.out.println("\nTransfer rejected. Amount must be greater than $0.00.\n");
     	} else if (depositStatus == ATM.INVALIDMAX) {
     		System.out.println("\nTransfer rejected. Amount would cause destination balance to exceed $999,999,999,999.99. \n");
-    	} else if (depositStatus == ATM.SUCCESS) {
-    		System.out.println("\nTransfer accepted.\n");
     	} else if (depositStatus == ATM.INSUFFICIENT)  {
     		System.out.println("\nTransfer rejected. Insufficient funds.\n");
+    	} else if (depositStatus == ATM.SUCCESS) {
+    		System.out.println("\nTransfer accepted.\n");
     	}
     		
     	bank.update(activeAccount);
